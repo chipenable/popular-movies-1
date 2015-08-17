@@ -25,6 +25,9 @@ import java.util.HashMap;
 import java.util.List;
 
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnItemClick;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import ru.chipenable.popularmovies.connection.ConnectionStateReceiver;
@@ -47,7 +50,7 @@ public class MainFragment extends BaseFragment implements ImageAdapter.EndListLi
     private final static int SORT_BY_RATING = 1;
     private static final int MAX_AMOUNT_PAGES = 1000;
 
-    private GridView mGridView;
+    @Bind(R.id.movie_grid_view) GridView mGridView;
     private ImageAdapter mAdapter;
     private List<Result> mResultList;
     private boolean mFailureFlag;          //The flag will be set "true" if a data isn't downloaded
@@ -86,26 +89,17 @@ public class MainFragment extends BaseFragment implements ImageAdapter.EndListLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-
-        mGridView = (GridView) view.findViewById(R.id.movie_grid_view);
+        ButterKnife.bind(this, view);
+        //mGridView = (GridView) view.findViewById(R.id.movie_grid_view);
 
         /*It calculates a size of the ImageView for the GridView*/
         Point screenSize = getScreenSize();
-        int imageWith = screenSize.x/getResources().getInteger(R.integer.num_col);
+        int imageWidth = screenSize.x/getResources().getInteger(R.integer.num_col);
         int imageHeight = screenSize.y/getResources().getInteger(R.integer.num_row);
 
-        mAdapter = new ImageAdapter(getActivity(), mResultList, imageWith, imageHeight);
+        mAdapter = new ImageAdapter(getActivity(), mResultList, imageWidth, imageHeight);
         mAdapter.setEndListListener(this);
         mGridView.setAdapter(mAdapter);
-
-        /*it handles user clicks and start DetailActivity/DetailFragment*/
-        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Result result = (Result) parent.getAdapter().getItem(position);
-                mCallback.fragmentCallback(Command.SHOW_DETAIL, result.getId());
-            }
-        });
 
         mConnectionState = ConnectionStateReceiver.checkConnection(getActivity());
 
@@ -117,7 +111,22 @@ public class MainFragment extends BaseFragment implements ImageAdapter.EndListLi
             downloadMovies(mCurPage, mSort);
         }
 
+        Log.d(TAG, mResultList.toString());
+
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
+    /*it handles user clicks and start DetailActivity/DetailFragment*/
+    @OnItemClick(R.id.movie_grid_view)
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Result result = (Result) parent.getAdapter().getItem(position);
+        mCallback.fragmentCallback(Command.SHOW_DETAIL, result.getId());
     }
 
     @Override

@@ -17,6 +17,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import ru.chipenable.popularmovies.R;
@@ -34,13 +36,13 @@ public class DetailFragment extends BaseFragment {
     private static final String MOVIE_ID = "movie_id";
 
     //view components
-    private TextView mTitle;
-    private TextView mDate;
-    private TextView mDuration;
-    private TextView mRating;
-    private ImageView mPoster;
-    private TextView mPlot;
-    private TextView mGenre;
+    @Bind(R.id.title) TextView mTitle;
+    @Bind(R.id.date)  TextView mDate;
+    @Bind(R.id.duration) TextView mDuration;
+    @Bind(R.id.rating) TextView mRating;
+    @Bind(R.id.poster) ImageView mPoster;
+    @Bind(R.id.plot) TextView mPlot;
+    @Bind(R.id.genre) TextView mGenre;
 
     private long mMovieId;
     private boolean mFailureFlag;
@@ -75,18 +77,10 @@ public class DetailFragment extends BaseFragment {
         Log.d(TAG, "movie id: " + Long.toString(mMovieId));
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
-
-        mTitle = (TextView) view.findViewById(R.id.title);
-        mDate  = (TextView) view.findViewById(R.id.date);
-        mDuration = (TextView) view.findViewById(R.id.duration);
-        mRating = (TextView) view.findViewById(R.id.rating);
-        mPoster = (ImageView) view.findViewById(R.id.poster);
-        mPlot   = (TextView) view.findViewById(R.id.plot);
-        mGenre  = (TextView) view.findViewById(R.id.genre);
+        ButterKnife.bind(this, view);
 
         Point screenSize = getScreenSize();
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams)mPoster.getLayoutParams();
@@ -95,6 +89,12 @@ public class DetailFragment extends BaseFragment {
 
         downloadMovieDetails();
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
     private void downloadMovieDetails() {

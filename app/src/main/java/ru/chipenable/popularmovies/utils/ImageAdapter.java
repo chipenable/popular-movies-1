@@ -28,7 +28,6 @@ public class ImageAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<Result> mMovieList;
-    private Integer[] mThumbIds;
     private int mWidth;
     private int mHeight;
     private EndListListener mEndListener;
@@ -73,7 +72,7 @@ public class ImageAdapter extends BaseAdapter {
         if (convertView == null) {
             imageView = new ImageView(mContext);
             imageView.setLayoutParams(new GridView.LayoutParams(mWidth, mHeight));
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
 
         } else {
             imageView = (ImageView) convertView;
@@ -86,7 +85,6 @@ public class ImageAdapter extends BaseAdapter {
         /*Show poster by using Picasso library*/
         Picasso.with(mContext)
                 .load(url)
-                .fit()
                 .error(R.drawable.noposter)
                 .into(imageView);
 
