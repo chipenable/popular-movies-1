@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import ru.chipenable.popularmovies.R;
 import ru.chipenable.popularmovies.client.MovieClient;
 import ru.chipenable.popularmovies.model.Command;
@@ -24,14 +26,13 @@ public class MainActivity extends Activity implements BaseFragment.FragmentCallb
 
     /*When I adapt my project for tablets both MainFragment and
     DetailFragment will use the same progress bar*/
-    private ProgressBar mProgressBar;
+    @Bind(R.id.progress_bar) ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        ButterKnife.bind(this);
 
         if (MovieClient.KEY.equals("")){
             Toast.makeText(this, R.string.no_key, Toast.LENGTH_LONG).show();

@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import ru.chipenable.popularmovies.R;
 import ru.chipenable.popularmovies.model.Command;
 
@@ -18,7 +20,7 @@ public class DetailActivity extends Activity implements BaseFragment.FragmentCal
     public static final String TAG = "DetailActivity";
     private static final String MOVIE_ID = "movie_id";
 
-    private ProgressBar mProgressBar;
+    @Bind(R.id.progress_bar) ProgressBar mProgressBar;
 
     public static Intent makeIntent(Context context, long movieId){
         Intent intent = new Intent(context, DetailActivity.class);
@@ -42,8 +44,7 @@ public class DetailActivity extends Activity implements BaseFragment.FragmentCal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-
-        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        ButterKnife.bind(this);
 
         if (savedInstanceState == null) {
             DetailFragment fragment = DetailFragment.newInstance(getMovieId());
